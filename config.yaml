@@ -1,0 +1,65 @@
+# 测试用例清洗配置
+# Test Case Cleaning Configuration
+
+# 输入文件配置
+input:
+  excel_path: "data/布局与显示.xls"
+
+# 输出文件配置
+output:
+  dir: "outputs"
+  cleaned_excel: "cleaned_cases.xlsx"
+  report_md: "cleaning_report.md"
+  report_html: "cleaning_report.html"
+  screenshots_dir: "screenshots"
+
+# AI / LLM 配置
+ai:
+  provider: "openai"  # openai | deepseek | custom
+  model: "gpt-4o"
+  api_key_env: "OPENAI_API_KEY"  # 环境变量名
+  base_url: "https://api.openai.com/v1"  # 可切换为 DeepSeek 等兼容 API
+  temperature: 0.1  # 低温度保证输出一致性
+  max_tokens: 4096
+
+# Playwright 配置
+playwright:
+  headless: false  # 调试时可设为 false 观察执行过程
+  timeout: 30000   # 单步操作超时(ms)
+  wait_after_action: 1000  # 操作后等待(ms)
+  viewport_width: 1280
+  viewport_height: 800
+  executable_path: ""  # 安装包路径，留空使用系统浏览器
+
+# 应用配置
+app:
+  name: "同花顺远航版"
+  process_name: "同花顺远航版.exe"
+  # 客户端窗口标题关键词，用于定位窗口
+  window_title_keywords: ["同花顺", "远航版", "THS"]
+  # 启动命令（可选，如果已手动启动则留空）
+  launch_command: ""
+
+# 清洗策略
+cleaning:
+  # 最大并发用例数
+  max_concurrent: 1
+  # 单个用例最大重试次数
+  max_retries: 2
+  # 是否在失败时截图
+  screenshot_on_failure: true
+  # 是否在成功时截图
+  screenshot_on_success: true
+  # AI 分析超时(秒)
+  ai_timeout: 60
+  # 清洗标签
+  tags:
+    executable: "可执行"
+    not_executable: "不可执行"
+    component_missing: "组件缺失"
+    expected_mismatch: "预期不一致"
+    step_insufficient: "步骤不足"
+    description_unclear: "描述不清"
+    duplicate: "重复用例"
+    passed: "通过"
+    failed: "未通过"
