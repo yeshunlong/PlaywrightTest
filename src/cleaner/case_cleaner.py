@@ -285,7 +285,11 @@ class CaseCleaner:
                 "failure_details": self._format_failure_details(results),
                 "module_name": results[0].case.category if results else "",
             }
-            report.summary = self.llm.generate_summary(stats)
+            summary = self.llm.generate_summary(stats)
+            if not summary or summary.strip() in ("", "{}"):
+                report.summary = self._generate_fallback_summary(report)
+            else:
+                report.summary = summary
         except Exception as e:
             logger.warning(f"AI 摘要生成失败: {e}")
             report.summary = self._generate_fallback_summary(report)

@@ -3,7 +3,7 @@
 
 # 输入文件配置
 input:
-  excel_path: "data/布局与显示.xls"
+  excel_path: "data/布局与显示.xlsx"
 
 # 输出文件配置
 output:
