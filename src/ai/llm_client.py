@@ -12,6 +12,7 @@ LLM 客户端
 import json
 import os
 import re
+import time
 from typing import Any
 
 import openai
@@ -27,6 +28,7 @@ from src.ai.prompts import (
     REPORT_SUMMARY_SYSTEM,
     REPORT_SUMMARY_USER,
 )
+from src.ai.call_logger import get_logger as get_ai_logger
 
 
 class LLMClient:
@@ -49,14 +51,30 @@ class LLMClient:
             self.client = openai.OpenAI(api_key=self.api_key, base_url=self.base_url)
             self.mock_mode = False
 
-    def chat(self, system_prompt: str, user_prompt: str) -> str:
-        """发送对话请求"""
+    def chat(self, system_prompt: str, user_prompt: str, purpose: str = "", case_name: str = "") -> str:
+        """发送对话请求，同时记录到 AI 交互日志"""
+        start_time = time.time()
+        error_msg = None
+        ai_logger = get_ai_logger()
+
         if self.mock_mode:
             logger.info("[MOCK] AI 调用: {}", user_prompt[:100])
-            return self._mock_response(system_prompt, user_prompt)
+            response = self._mock_response(system_prompt, user_prompt)
+            ai_logger.record(
+                purpose=purpose,
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                response=response,
+                duration_ms=int((time.time() - start_time) * 1000),
+                model=self.model,
+                temperature=self.temperature,
+                case_name=case_name,
+                mock_mode=True,
+            )
+            return response
 
         try:
-            response = self.client.chat.completions.create(
+            llm_response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -65,9 +83,34 @@ class LLMClient:
                 temperature=self.temperature,
                 max_tokens=self.max_tokens,
             )
-            return response.choices[0].message.content or ""
+            response = llm_response.choices[0].message.content or ""
+            duration_ms = int((time.time() - start_time) * 1000)
+            ai_logger.record(
+                purpose=purpose,
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                response=response,
+                duration_ms=duration_ms,
+                model=self.model,
+                temperature=self.temperature,
+                case_name=case_name,
+                tokens_used=llm_response.usage.total_tokens if llm_response.usage else 0,
+            )
+            return response
         except Exception as e:
             logger.error(f"AI 调用失败: {e}")
+            error_msg = str(e)
+            ai_logger.record(
+                purpose=purpose,
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                response="",
+                duration_ms=int((time.time() - start_time) * 1000),
+                model=self.model,
+                temperature=self.temperature,
+                case_name=case_name,
+                error=error_msg,
+            )
             return self._mock_response(system_prompt, user_prompt)
 
     def _mock_response(self, system: str, user: str) -> str:
@@ -85,7 +128,7 @@ class LLMClient:
             expected_result=case.get("预期结果", ""),
         )
 
-        response = self.chat(STEP_PARSE_SYSTEM, prompt)
+        response = self.chat(STEP_PARSE_SYSTEM, prompt, purpose="步骤解析", case_name=case.get("用例名称", ""))
         return self._extract_json(response, default=[])
 
     def generate_actions(self, case: dict, parsed_steps: list[dict] = None) -> list[dict]:
@@ -104,7 +147,7 @@ class LLMClient:
             expected_result=case.get("预期结果", ""),
         )
 
-        response = self.chat(ACTION_GEN_SYSTEM, prompt)
+        response = self.chat(ACTION_GEN_SYSTEM, prompt, purpose="操作生成", case_name=case.get("用例名称", ""))
         return self._extract_json(response, default=[])
 
     def analyze_result(
@@ -120,7 +163,7 @@ class LLMClient:
             execution_log=execution_log,
         )
 
-        response = self.chat(RESULT_ANALYSIS_SYSTEM, prompt)
+        response = self.chat(RESULT_ANALYSIS_SYSTEM, prompt, purpose="结果分析", case_name=case_name)
         return self._extract_json(response, default={
             "passed": False,
             "confidence": 0.5,
@@ -141,7 +184,7 @@ class LLMClient:
             module_name=stats.get("module_name", "布局与显示"),
         )
 
-        response = self.chat(REPORT_SUMMARY_SYSTEM, prompt)
+        response = self.chat(REPORT_SUMMARY_SYSTEM, prompt, purpose="报告摘要")
         return response
 
     @staticmethod
