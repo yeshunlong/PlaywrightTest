@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试用例清洗报告</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f0f2f5; color: #333; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #1f4e79, #2d6da5); color: white; padding: 30px; border-radius: 8px; margin-bottom: 20px; }
+        .header h1 { font-size: 24px; }
+        .header p { opacity: 0.8; margin-top: 8px; }
+        .stats { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; flex: 1; min-width: 180px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center; }
+        .stat-card .value { font-size: 32px; font-weight: bold; }
+        .stat-card .label { color: #666; font-size: 14px; margin-top: 4px; }
+        .stat-card.total .value { color: #1f4e79; }
+        .stat-card.passed .value { color: #22c55e; }
+        .stat-card.failed .value { color: #ef4444; }
+        .section { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .section h2 { font-size: 18px; margin-bottom: 16px; color: #1f4e79; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background: #1f4e79; color: white; padding: 10px 12px; text-align: left; }
+        td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; }
+        tr.passed { background: #f0fdf4; }
+        tr.failed { background: #fef2f2; }
+        .badge { color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+        .summary { line-height: 1.8; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>测试用例清洗报告</h1>
+            <p>生成时间: 2026-06-29T19:49:33.103062</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card total">
+                <div class="value">10</div>
+                <div class="label">总用例数</div>
+            </div>
+            <div class="stat-card passed">
+                <div class="value">5</div>
+                <div class="label">通过</div>
+            </div>
+            <div class="stat-card failed">
+                <div class="value">5</div>
+                <div class="label">未通过</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">50.0%</div>
+                <div class="label">通过率</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>标签分布</h2>
+            <table>
+                <tr><th>标签</th><th>数量</th></tr>
+                <tr><td>通过</td><td>5</td></tr><tr><td>可执行</td><td>5</td></tr><tr><td>未通过</td><td>5</td></tr><tr><td>不可执行</td><td>5</td></tr><tr><td>组件缺失</td><td>5</td></tr><tr><td>预期不一致</td><td>2</td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>AI 摘要分析</h2>
+            <div class="summary">## 清洗摘要
+
+### 总体情况
+- 总用例数：10
+- 通过数：5
+- 未通过数：5
+- 通过率：50.0%
+
+### 问题分类
+- 通过: 5条
+- 可执行: 5条
+- 未通过: 5条
+- 不可执行: 5条
+- 组件缺失: 5条
+- 预期不一致: 2条
+
+### 关键发现
+1. 通过率 50.0%，需关注未通过用例的修复。
+2. 存在 5 条不可执行用例，需要与产品和开发确认组件状态。
+3. 建议对不可执行用例进行分类处理：废弃、更新或替换测试目标。
+
+### 改进建议
+- 定期（建议每版本/每月）执行用例清洗，避免用例腐化
+- 对预期结果中硬编码的具体值（如标签名、菜单名）进行参数化
+- 将跨模块依赖的校验项解耦，降低维护成本
+</div>
+        </div>
+
+        <div class="section">
+            <h2>逐用例详情</h2>
+            <table>
+                <tr>
+                    <th style="width:140px">用例编号</th>
+                    <th style="width:160px">用例名称</th>
+                    <th>操作描述</th>
+                    <th>预期结果</th>
+                    <th style="width:70px">状态</th>
+                    <th style="width:200px">原因</th>
+                    <th style="width:250px">标签 / 建议</th>
+                </tr>
+                
+            <tr class="passed">
+                <td>TC_组件窗口_基础布局</td>
+                <td>TC_组件窗口_基础布局</td>
+                <td>1、打开【通用工具】-【示例板块】组件
+2、观察窗口整体区域...</td>
+                <td>窗口上方显示标题栏；中间显示内容区；右上角显示菜单按钮...</td>
+                <td><span class="badge" style="background:#22c55e">通过</span></td>
+                <td style="font-size:12px">窗口布局要素完整：标题栏、内容区、菜单按钮均显示正常</td>
+                <td><span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">通过</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">可执行</span></td>
+            </tr>
+            
+            <tr class="passed">
+                <td>TC_组件窗口_默认尺寸</td>
+                <td>TC_组件窗口_默认尺寸</td>
+                <td>1、打开【通用工具】-【示例板块】组件
+2、观察组件初始窗口大小...</td>
+                <td>窗口以默认尺寸打开，内容区域完整显示，无明显遮挡...</td>
+                <td><span class="badge" style="background:#22c55e">通过</span></td>
+                <td style="font-size:12px">窗口以默认尺寸打开，内容区域完整显示，无遮挡</td>
+                <td><span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">通过</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">可执行</span></td>
+            </tr>
+            
+            <tr class="passed">
+                <td>TC_导航栏_标签显示</td>
+                <td>TC_导航栏_标签显示</td>
+                <td>1、查看组件顶部标签导航栏
+2、切换任一标签后再切回默认标签...</td>
+                <td>导航栏展示多个业务标签；当前选中标签有高亮状态；切换后内容区刷新...</td>
+                <td><span class="badge" style="background:#22c55e">通过</span></td>
+                <td style="font-size:12px">导航栏标签正常显示，选中状态、高亮、切换刷新均符合预期</td>
+                <td><span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">通过</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">可执行</span></td>
+            </tr>
+            
+            <tr class="passed">
+                <td>TC_列表区域_基础显示</td>
+                <td>TC_列表区域_基础显示</td>
+                <td>1、查看左侧列表区域
+2、点击左侧任一分类
+3、查看右侧明细区域...</td>
+                <td>左侧显示分类列表，右侧显示对应明细；切换分类后明细区域随之刷新...</td>
+                <td><span class="badge" style="background:#22c55e">通过</span></td>
+                <td style="font-size:12px">左侧分类列表、右侧明细区域显示正常，分类切换后明细刷新正确</td>
+                <td><span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">通过</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">可执行</span></td>
+            </tr>
+            
+            <tr class="passed">
+                <td>TC_窗口缩放_横向拉伸</td>
+                <td>TC_窗口缩放_横向拉伸</td>
+                <td>1、拖动窗口右边缘向右拉伸
+2、观察内容区域变化...</td>
+                <td>窗口宽度变大后，内容区域随窗口自适应扩展，主要控件不重叠...</td>
+                <td><span class="badge" style="background:#22c55e">通过</span></td>
+                <td style="font-size:12px">窗口拉伸后内容区域自适应扩展，控件布局正常，无重叠</td>
+                <td><span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">通过</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">可执行</span></td>
+            </tr>
+            
+            <tr class="failed">
+                <td>TC_组件入口_打开板块</td>
+                <td>TC_组件入口_打开板块</td>
+                <td>1、打开示例板块...</td>
+                <td>弹出示例板块组件窗口...</td>
+                <td><span class="badge" style="background:#ef4444">未通过</span></td>
+                <td style="font-size:12px">当前版本客户端中不存在「示例板块」组件入口。
+该用例引用的组件已被移除或重命名，导致测试步骤无法执行。</td>
+                <td><span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">未通过</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">不可执行</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">组件缺失</span><div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:4px;font-size:13px"><strong>修复建议:</strong><br>建议：1) 确认「示例板块」组件在当前版本中是否已下线；<br>2) 如果组件已重命名，更新操作描述中的组件名称；<br>3) 如果组件已下线，标记此用例为「已废弃」或删除。<br>4) 使用实际存在的业务板块（如「行情中心」-「板块指数」）替换测试目标。</div></td>
+            </tr>
+            
+            <tr class="failed">
+                <td>TC_导航栏_默认选中项</td>
+                <td>TC_导航栏_默认选中项</td>
+                <td>1、查看顶部导航栏默认选中的标签...</td>
+                <td>默认选中【地域指数】标签...</td>
+                <td><span class="badge" style="background:#ef4444">未通过</span></td>
+                <td style="font-size:12px">当前版本无「示例板块」组件，因此无法验证导航栏默认选中项。
+即使存在该组件，默认选中标签也可能随版本变化。</td>
+                <td><span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">未通过</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">不可执行</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">组件缺失</span><div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:4px;font-size:13px"><strong>修复建议:</strong><br>建议：1) 将测试目标替换为实际存在的组件；<br>2) 将预期结果中的明确标签名（「地域指数」）改为验证'存在默认选中项且高亮'，避免标签名硬编码。</div></td>
+            </tr>
+            
+            <tr class="failed">
+                <td>TC_右上角菜单_分组设置</td>
+                <td>TC_右上角菜单_分组设置</td>
+                <td>1、点击菜单
+2、查看是否有分组设置...</td>
+                <td>菜单中显示【设置组件分组】选项...</td>
+                <td><span class="badge" style="background:#ef4444">未通过</span></td>
+                <td style="font-size:12px">当前版本无「示例板块」组件，无法验证其菜单功能。
+此外，菜单项名称可能已变更（「设置组件分组」vs 当前命名）。</td>
+                <td><span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">未通过</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">不可执行</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">组件缺失</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">预期不一致</span><div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:4px;font-size:13px"><strong>修复建议:</strong><br>建议：1) 替换测试目标为实际存在的组件；<br>2) 验证菜单项名称是否与当前版本一致；<br>3) 将预期结果改为'菜单中包含分组相关设置项'以降低维护成本。</div></td>
+            </tr>
+            
+            <tr class="failed">
+                <td>TC_窗口最小宽度_校验</td>
+                <td>TC_窗口最小宽度_校验</td>
+                <td>1、横向压缩组件窗口直到不能继续压缩
+2、观察窗口状态...</td>
+                <td>窗口达到最小宽度...</td>
+                <td><span class="badge" style="background:#ef4444">未通过</span></td>
+                <td style="font-size:12px">当前版本无「示例板块」组件，无法验证其窗口最小宽度。
+建议使用实际存在的组件窗口进行最小宽度校验。</td>
+                <td><span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">未通过</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">不可执行</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">组件缺失</span><div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:4px;font-size:13px"><strong>修复建议:</strong><br>建议：1) 替换为目标组件（如「板块指数」窗口）；<br>2) 预期结果应量化最小宽度值（如'窗口最小宽度≥400px'）。</div></td>
+            </tr>
+            
+            <tr class="failed">
+                <td>TC_列表刷新_切换分类</td>
+                <td>TC_列表刷新_切换分类</td>
+                <td>1、点击左侧任意分类
+2、观察右侧明细列表...</td>
+                <td>右侧明细列表颜色、数量、排序均与行情中心保持一致...</td>
+                <td><span class="badge" style="background:#ef4444">未通过</span></td>
+                <td style="font-size:12px">当前版本无「示例板块」组件，无法验证列表刷新功能。
+预期结果中提到与「行情中心」保持一致，属于跨模块依赖校验，增加了维护成本。</td>
+                <td><span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">未通过</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">不可执行</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">组件缺失</span> <span style="background:#e2e8f0;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px">预期不一致</span><div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:4px;font-size:13px"><strong>修复建议:</strong><br>建议：1) 替换测试目标组件；<br>2) 解耦与行情中心的依赖，改为验证'切换后明细列表数据有变化'即可；<br>3) 如果需要精确的颜色/数量/排序校验，建议使用独立的接口级自动化测试。</div></td>
+            </tr>
+            
+            </table>
+        </div>
+
+        <div style="text-align:center;color:#999;font-size:12px;padding:20px">
+            此报告由 AI 测试用例清洗工程自动生成
+        </div>
+    </div>
+</body>
+</html>

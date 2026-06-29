@@ -1,0 +1,195 @@
+{
+  "meta": {
+    "name": "同花顺远航版测试用例清洗 Harness",
+    "version": "1.0.0",
+    "description": "基于 Playwright + AI 的测试用例自动化执行与清洗框架",
+    "exported_at": "2026-06-29T11:49:33.141996+00:00"
+  },
+  "architecture": {
+    "overview": "Playwright 自动化浏览器 → 操作同花顺远航版客户端 → AI 分析结果",
+    "components": {
+      "browser_engine": {
+        "framework": "Playwright (async)",
+        "browser": "Chromium",
+        "mode": "desktop_webview",
+        "connection": "通过 Chromium 连接到客户端内嵌 WebView"
+      },
+      "ai_engine": {
+        "provider": "openai",
+        "model": "gpt-4o",
+        "temperature": 0.1,
+        "api_type": "OpenAI 兼容 API",
+        "roles": [
+          "步骤解析: 自然语言 → 结构化操作步骤",
+          "操作生成: 结构化步骤 → Playwright 操作指令",
+          "结果分析: 截图 + 日志 → 通过/失败 + 清洗标签",
+          "报告摘要: 统计数据 → 自然语言分析报告"
+        ]
+      },
+      "action_executor": {
+        "supported_actions": [
+          {
+            "type": "click",
+            "description": "点击 UI 元素，支持 text/role/menuitem 定位"
+          },
+          {
+            "type": "dblclick",
+            "description": "双击 UI 元素"
+          },
+          {
+            "type": "input",
+            "description": "文本输入"
+          },
+          {
+            "type": "wait",
+            "description": "等待，毫秒级"
+          },
+          {
+            "type": "screenshot",
+            "description": "全页截图"
+          },
+          {
+            "type": "assert",
+            "description": "断言元素存在/文本匹配"
+          },
+          {
+            "type": "scroll",
+            "description": "页面滚动"
+          },
+          {
+            "type": "hover",
+            "description": "鼠标悬停"
+          },
+          {
+            "type": "resize",
+            "description": "窗口尺寸调整"
+          },
+          {
+            "type": "observe",
+            "description": "截图 + AI 视觉分析"
+          }
+        ],
+        "element_strategies": [
+          {
+            "strategy": "text",
+            "description": "按文本内容匹配元素"
+          },
+          {
+            "strategy": "role",
+            "description": "按 WAI-ARIA 语义角色匹配"
+          },
+          {
+            "strategy": "selector",
+            "description": "CSS/XPath 精确选择器"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "playwright": {
+      "headless": false,
+      "timeout_ms": 30000,
+      "wait_after_action_ms": 1000,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    "execution": {
+      "max_concurrent_cases": 1,
+      "max_retries": 2,
+      "screenshot_on_success": true,
+      "screenshot_on_failure": true
+    }
+  },
+  "pipeline": {
+    "stages": [
+      {
+        "stage": 1,
+        "name": "Excel 解析",
+        "input": "布局与显示.xlsx",
+        "output": "TestCase[] 结构化用例列表",
+        "tools": [
+          "openpyxl"
+        ],
+        "description": "读取 Excel，自动识别列头，映射为结构化 TestCase 对象"
+      },
+      {
+        "stage": 2,
+        "name": "AI 步骤解析",
+        "input": "TestCase（自然语言描述）",
+        "output": "TestCase（含 parsed_steps 结构化步骤）",
+        "tools": [
+          "LLMClient → step_parse prompt"
+        ],
+        "description": "LLM 将操作描述拆分为独立的结构化步骤"
+      },
+      {
+        "stage": 3,
+        "name": "操作指令生成",
+        "input": "结构化步骤",
+        "output": "PlaywrightAction[] 操作指令列表",
+        "tools": [
+          "LLMClient → action_gen prompt",
+          "ActionGenerator (规则降级)"
+        ],
+        "description": "AI 生成 + 规则引擎降级的双重操作生成策略"
+      },
+      {
+        "stage": 4,
+        "name": "Playwright 执行",
+        "input": "PlaywrightAction[]",
+        "output": "StepExecutionResult[] + 截图",
+        "tools": [
+          "PlaywrightRunner",
+          "Chromium"
+        ],
+        "description": "在真实客户端上逐步执行操作，截图留证"
+      },
+      {
+        "stage": 5,
+        "name": "AI 结果分析",
+        "input": "执行日志 + 截图 + 预期结果",
+        "output": "CaseExecutionResult (passed/failed + tags + suggestion)",
+        "tools": [
+          "LLMClient → result_analysis prompt"
+        ],
+        "description": "AI 综合判断用例是否通过，生成清洗标签和修复建议"
+      },
+      {
+        "stage": 6,
+        "name": "报告生成",
+        "input": "CaseExecutionResult[]",
+        "output": "cleaned_cases.xlsx + cleaning_report.md + cleaning_report.html",
+        "tools": [
+          "openpyxl",
+          "ReportGenerator"
+        ],
+        "description": "生成三种格式的清洗报告"
+      }
+    ]
+  },
+  "run_modes": {
+    "demo": {
+      "description": "演示模式，零外部依赖",
+      "requires": [
+        "Python 3.10+",
+        "pip install -r requirements.txt"
+      ],
+      "command": "python main.py demo",
+      "output": "outputs/cleaned_cases.xlsx, outputs/cleaning_report.md, outputs/cleaning_report.html"
+    },
+    "full": {
+      "description": "完整模式，真实执行 + AI 分析",
+      "requires": [
+        "Python 3.10+",
+        "OpenAI API Key",
+        "同花顺远航版客户端",
+        "playwright install chromium"
+      ],
+      "command": "export OPENAI_API_KEY=sk-xxx && python main.py full",
+      "output": "同 demo + outputs/screenshots/ + outputs/ai_interaction_log.json"
+    }
+  }
+}
